@@ -15,7 +15,7 @@ public class RacerMain extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		Gdx.gl.glClearColor((float)0.8549, (float)0.6666, (float)1, 1);
+		Gdx.gl.glClearColor((float)0.9373, (float)0.8471, (float)1, 1);
 		spriteBatch = new SpriteBatch();
 		gm = new GameStateManager();
 		gm.push(new MenuState(gm));

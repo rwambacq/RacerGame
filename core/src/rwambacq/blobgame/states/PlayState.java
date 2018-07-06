@@ -14,8 +14,10 @@ public class PlayState extends State {
 
     private ObstacleSeries obstacles;
 
-    private Texture tunnelPixel;
+    private Texture pixelWhite;
     private Texture obstacle;
+    private Texture rightArrow;
+    private Texture leftArrow;
 
     private ArrayBlockingQueue<Boolean[]> screenObstacles;
 
@@ -24,9 +26,14 @@ public class PlayState extends State {
 
     protected PlayState(GameStateManager gsm) {
         super(gsm);
+
         obstacles = new ObstacleSeries();
+
         obstacle = new Texture("tile.png");
-        tunnelPixel = new Texture("pixel_wit.png");
+        pixelWhite = new Texture("pixel_wit.png");
+        rightArrow = new Texture("arrow_right.png");
+        leftArrow = new Texture("arrow_left.png");
+
         screenObstacles = new ArrayBlockingQueue<Boolean[]>(8);
         for (int i = 0; i < 8; i++) {
             Boolean[] array = new Boolean[4];
@@ -37,10 +44,18 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
+        if(Gdx.input.justTouched()){
+            if(Gdx.input.getX()>Gdx.graphics.getWidth()/2){
+                System.out.println("Move Right");
+            } else if(Gdx.input.getX() <= Gdx.graphics.getWidth()/2){
+                System.out.println("Move left");
+            }
+        }
     }
 
     @Override
     public void update(float dt) {
+        handleInput();
         if(topObstacleSize < obstacleSize){
             topObstacleSize += 15;
         } else {
@@ -53,6 +68,10 @@ public class PlayState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
+        for (int i = 1; i < 4; i++) {
+            sb.draw(pixelWhite, (Gdx.graphics.getWidth()/4)*i, 0,
+                    1, Gdx.graphics.getHeight());
+        }
         Iterator<Boolean[]> iterator = screenObstacles.iterator();
         for (int i = 0; i < screenObstacles.size(); i++) {
             Boolean[] nextRow = iterator.next();
@@ -62,10 +81,16 @@ public class PlayState extends State {
                 }
             }
         }
+        sb.draw(leftArrow, 20, 20, Gdx.graphics.getWidth()/4, Gdx.graphics.getWidth()/4);
+        sb.draw(rightArrow, Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/4)-20, 20,Gdx.graphics.getWidth()/4, Gdx.graphics.getWidth()/4);
         sb.end();
     }
 
     @Override
     public void dispose() {
+        rightArrow.dispose();
+        leftArrow.dispose();
+        pixelWhite.dispose();
+        obstacle.dispose();
     }
 }
